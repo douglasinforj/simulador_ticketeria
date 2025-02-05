@@ -20,8 +20,37 @@ class IngressoViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def vendidos(self, request):
-        # EndPoint pública
-        ingresso = Ingresso.objects.all()
-        serializer = IngressoSerializer(ingresso, many=True)
+        """Lista todos os ingressos vendidos, incluindo o CPF do comprador"""
+        ingressos = Ingresso.objects.all()
+        serializer = IngressoSerializer(ingressos, many=True)
         return Response(serializer.data)
 
+
+
+    def create(self, request, *args, **kwargs):
+        
+        """Cria um ingresso a partir do CPF e do evento"""
+
+        cpf = request.data.get("cpf")
+        evento_id = request.data.get("evento_id")
+
+        if not cpf or not evento_id:
+            return Response({"erro": "CPF e evento_id são obrigatórios."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Buscar o cliente pelo CPF
+        try:
+            cliente = Cliente.objects.get(cpf=cpf)
+        except Cliente.DoesNotExist:
+            return Response({"erro": "Cliente não encontrado."}, status=status.HTTP_404_NOT_FOUND)
+
+        # Buscar o evento pelo ID
+        try:
+            evento = Evento.objects.get(id=evento_id)
+        except Evento.DoesNotExist:
+            return Response({"erro": "Evento não encontrado."}, status=status.HTTP_404_NOT_FOUND)
+
+        # Criar ingresso
+        ingresso = Ingresso.objects.create(cliente=cliente, evento=evento)
+        serializer = IngressoSerializer(ingresso)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)

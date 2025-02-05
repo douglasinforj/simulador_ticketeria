@@ -1,10 +1,27 @@
 # Projeto Ticketeria
 
 ## Descrição
-Criando para efeito de estudos uma simulação de ticketeria para eventos 
+Criamos uma API em Django REST Framework para gerenciar a compra e validação de ingressos para eventos. 
+A API permite que usuários comprem ingressos informando CPF e ID do evento, e gera automaticamente um código de 
+barras e um UUID único para cada ingresso.
 
 ## Funcionalidade
-- Cadastro de clientes(Nome, CPF, Email, Telefone)
-- Compra de ingressos(Cliente escolhe um ingreço e compra o ingresso)
-- Geração de código de barras para identificar cada ingresso
-- Endpoint para consulta de ingresso vendidos (acesso de terceiros)
+Clientes (Cliente)
+ - Cadastro de clientes com nome, CPF, e-mail e telefone.
+ - CPF é único para garantir que cada cliente seja identificado corretamente.
+
+Eventos (Evento)
+ - Cadastro de eventos com nome, data e local.
+ - Ingressos (Ingresso)
+ - Compra de ingressos informando CPF e ID do evento.
+ - O sistema vincula o ingresso ao cliente correspondente.
+ - Geração automática de UUID para cada ingresso.
+ - Criação e armazenamento de código de barras para cada ingresso.
+
+Ingressos (Ingresso)
+ - Compra de ingressos informando CPF e ID do evento.
+ - O sistema vincula o ingresso ao cliente correspondente.
+ - Geração automática de UUID para cada ingresso.
+ - Criação e armazenamento de código de barras para cada ingresso.
+
+
