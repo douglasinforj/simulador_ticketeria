@@ -24,6 +24,25 @@ class IngressoViewSet(viewsets.ModelViewSet):
         ingressos = Ingresso.objects.all()
         serializer = IngressoSerializer(ingressos, many=True)
         return Response(serializer.data)
+    
+
+    @action(detail=False, methods=['get'])
+    def validar_ingresso(self, request):
+        codigo_ingresso = request.query_params.get('codigo_ingresso')
+        if not codigo_ingresso:
+            return Response({"erro": "Código de ingresso não fornecido!"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            ingresso = Ingresso.objects.get(codigo_ingresso=codigo_ingresso)
+            data = {
+                "status": True,
+                "cliente_nome": ingresso.cliente.nome,
+                "cliente_cpf": ingresso.cliente.cpf
+            }
+            return Response(data, status=status.HTTP_200_OK)
+        except Ingresso.DoesNotExist:
+            return Response({"status": False, "mensagem": "Ingresso não encontrado!"}, status=status.HTTP_404_NOT_FOUND)
+
 
 
 
